@@ -10,13 +10,12 @@ import android.view.inputmethod.CompletionInfo
 import android.view.inputmethod.CorrectionInfo
 import android.view.inputmethod.ExtractedText
 import android.view.inputmethod.ExtractedTextRequest
-import android.widget.SearchView
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 
 /**
  * Source: https://stackoverflow.com/a/39460124
  */
+@Suppress("TooManyFunctions")
 class OtherInputConnection(private val mTextView: AppCompatAutoCompleteTextView?) : BaseInputConnection(
     mTextView!!, true
 ) {
@@ -68,14 +67,14 @@ class OtherInputConnection(private val mTextView: AppCompatAutoCompleteTextView?
             try {
                 kl.clearMetaKeyState(mTextView, content, states)
             } catch (e: AbstractMethodError) {
-                // This is an old listener that doesn't implement the
-                // new method.
+                Log.w(TAG, "Old listener missing clearMetaKeyState(), ignoring", e)
             }
         }
         return true
     }
 
-    //When a user selects a suggestion from an autocomplete or suggestion list, the input method may call commitCompletion
+    /*When a user selects a suggestion from an autocomplete or suggestion list,
+    the input method may call commitCompletion*/
     override fun commitCompletion(text: CompletionInfo): Boolean {
         if (DEBUG) Log.v(
             TAG,
@@ -102,7 +101,8 @@ class OtherInputConnection(private val mTextView: AppCompatAutoCompleteTextView?
         return true
     }
 
-    /* It's used to simulate the action associated with an editor action, typically triggered by pressing the "Done" or "Enter" key on the keyboard.*/
+    /* It's used to simulate the action associated with an editor action,
+    typically triggered by pressing the "Done" or "Enter" key on the keyboard.*/
     override fun performEditorAction(actionCode: Int): Boolean {
         if (DEBUG) Log.v(
             TAG,
@@ -133,16 +133,14 @@ class OtherInputConnection(private val mTextView: AppCompatAutoCompleteTextView?
         if (mTextView != null) {
             val et = ExtractedText()
             if (mTextView.extractText(request, et)) {
-                if (flags and GET_EXTRACTED_TEXT_MONITOR != 0) {
-//                    mTextView.setExtracting(request);
-                }
                 return et
             }
         }
         return null
     }
 
-//    API to send private commands from an input method to its connected editor. This can be used to provide domain-specific features
+    /*API to send private commands from an input method to its connected editor.
+   This can be used to provide domain-specific features*/
     override fun performPrivateCommand(action: String, data: Bundle): Boolean {
         mTextView!!.onPrivateIMECommand(action, data)
         return true
@@ -177,13 +175,14 @@ class OtherInputConnection(private val mTextView: AppCompatAutoCompleteTextView?
 
         // It is possible that any other bit is used as a valid flag in a future release.
         // We should reject the entire request in such a case.
-        val KNOWN_FLAGS_MASK = CURSOR_UPDATE_IMMEDIATE or CURSOR_UPDATE_MONITOR
-        val unknownFlags = cursorUpdateMode and KNOWN_FLAGS_MASK.inv()
+         val knownFlagsMask = CURSOR_UPDATE_IMMEDIATE or CURSOR_UPDATE_MONITOR
+        val unknownFlags = cursorUpdateMode and knownFlagsMask.inv()
         if (unknownFlags != 0) {
             if (DEBUG) {
                 Log.d(
                     TAG,
-                    "Rejecting requestUpdateCursorAnchorInfo due to unknown flags. cursorUpdateMode=$cursorUpdateMode unknownFlags=$unknownFlags"
+                    "Rejecting requestUpdateCursorAnchorInfo due to " +
+                        "unknown flags. cursorUpdateMode=$cursorUpdateMode unknownFlags=$unknownFlags"
                 )
             }
             return false
@@ -193,6 +192,6 @@ class OtherInputConnection(private val mTextView: AppCompatAutoCompleteTextView?
 
     companion object {
         private const val DEBUG = false
-        private val TAG = "loool"
+        private const val TAG = "loool"
     }
 }

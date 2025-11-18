@@ -22,11 +22,13 @@
     android:layout_height="0dp"
     android:layout_gravity="center"
     android:gravity="center">
-    <androidx.emoji2.emojipicker.EmojiView
+
+    <com.rishabh.emojipicker.EmojiView
         android:id="@+id/emoji_picker_popup_emoji_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
         android:background="@drawable/ripple_image_view"
         android:importantForAccessibility="yes" />
+
 </LinearLayout>

@@ -510,7 +510,7 @@ class MyKeyboardView @JvmOverloads constructor(
                             }
                         }
 
-                    //                        searchResultEmojiPickerView.build(mTextColor) {}//all the emoji is loaded
+
 
                     keyboardViewBinding!!.searchResultEmojiPickerView.setRecentEmojiProvider(mainRecentProvider!!)
                     keyboardViewBinding!!.emojiPickerView.setRecentEmojiProvider(mainRecentProvider)
@@ -521,7 +521,8 @@ class MyKeyboardView @JvmOverloads constructor(
                         searchResultEmojiPickerView.emojiPickedFromSuggestion = (emojipickedFromSuggestion)
 
 
-                        searchResultEmojiPickerView.emojiPickerItems = searchResultEmojiPickerView.buildEmojiPickerItems(true)
+                        searchResultEmojiPickerView.emojiPickerItems =
+                            searchResultEmojiPickerView.buildEmojiPickerItems(true)
                         searchResultEmojiPickerView.bodyAdapter.hideTitleAndEmptyHint = true
                         searchResultEmojiPickerView.bodyAdapter.notifyDataSetChanged()
 
@@ -570,7 +571,9 @@ class MyKeyboardView @JvmOverloads constructor(
             val textWatcher = object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { beforeTextEndPosition = start }
 
-                override fun onTextChanged(editable: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun onTextChanged(editable: CharSequence?, start: Int, before: Int, count: Int) {
+                    return
+                }
 
                 override fun afterTextChanged(editable: Editable?) {
                     if(!stopTextWatcherTopPopupSearchView) {
@@ -1886,23 +1889,7 @@ class MyKeyboardView @JvmOverloads constructor(
         }
     }
 
-//    private fun setupEmojis() {
-//        ensureBackgroundThread {
-//            val fullEmojiList = parseRawEmojiSpecsFile(context, EMOJI_SPEC_FILE_PATH)
-//            val systemFontPaint = Paint().apply {
-//                typeface = Typeface.DEFAULT
-//            }
-//
-//            val emojis = fullEmojiList.filter { emoji ->
-//                systemFontPaint.hasGlyph(emoji.emoji) || (EmojiCompat.get().loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && EmojiCompat.get()
-//                    .getEmojiMatch(emoji.emoji, emojiCompatMetadataVersion) == EMOJI_SUPPORTED)
-//            }
-//
-//            Handler(Looper.getMainLooper()).post {
-//                setupEmojiAdapter(emojis)
-//            }
-//        }
-//    }
+
 
     // For Vietnamese - Telex
     private fun setupLanguageTelex() {
